@@ -1,8 +1,13 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React, { useEffect } from "react";
+import logo from "./logo.svg";
+import "./App.css";
+import { calculate } from "entry";
 
 function App() {
+  useEffect(() => {
+    calculate();
+  });
+
   return (
     <div className="App">
       <header className="App-header">
