@@ -1,4 +1,19 @@
-export const List = ({ dataSource, users = [] }: any) => {
+import { User } from "./search-panel";
+
+interface Project {
+  id: string;
+  name: string;
+  personId: string;
+  pin: boolean;
+  organization: string;
+}
+
+interface ListProps<T, K> {
+  projects: T[];
+  users: K[];
+}
+
+export const List = ({ projects, users = [] }: ListProps<Project, User>) => {
   return (
     <table>
       <thead>
@@ -8,11 +23,11 @@ export const List = ({ dataSource, users = [] }: any) => {
         </tr>
       </thead>
       <tbody>
-        {dataSource.map((data: any) => (
-          <tr key={data.id}>
-            <td>{data.name}</td>
+        {projects.map((project: any) => (
+          <tr key={project.id}>
+            <td>{project.name}</td>
             <td>
-              {users.find((user: any) => user.id === data.personId)?.name ||
+              {users.find((user: any) => user.id === project.personId)?.name ||
                 "暂无"}
             </td>
           </tr>
