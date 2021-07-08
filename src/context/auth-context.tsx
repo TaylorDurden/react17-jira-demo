@@ -7,6 +7,8 @@ interface AuthForm {
   password: string;
 }
 
+
+
 const AuthContext = React.createContext<
   | {
       user: User | null;
@@ -21,7 +23,7 @@ AuthContext.displayName = "AuthContext";
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [user, setUser] = useState<User | null>(null);
 
-  // user => setUser(user) === 函数式编程中的point free
+  // (user => setUser(user) ==> setUser) === 函数式编程中的point free
   const login = (form: AuthForm) => Auth.login(form).then(setUser);
   const register = (form: AuthForm) => Auth.register(form).then(setUser);
   const logout = () => Auth.logout().then(() => setUser(null));
