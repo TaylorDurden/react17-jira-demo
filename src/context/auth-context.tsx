@@ -8,7 +8,6 @@ interface AuthForm {
 }
 
 
-
 const AuthContext = React.createContext<
   | {
       user: User | null;
