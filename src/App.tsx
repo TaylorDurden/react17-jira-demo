@@ -3,6 +3,7 @@ import logo from "./logo.svg";
 import "./App.css";
 import { calculate } from "entry";
 import { ProjectListScreen } from "page/project";
+import { LoginScreen } from "page/login";
 
 function App() {
   useEffect(() => {
@@ -11,7 +12,8 @@ function App() {
 
   return (
     <div className="App">
-      <ProjectListScreen></ProjectListScreen>
+      <LoginScreen></LoginScreen>
+      {/* <ProjectListScreen></ProjectListScreen> */}
     </div>
   );
 }
