@@ -36,7 +36,7 @@ const debounce = (func: any, delay: any) => {
 };
 
 // custom hook实现防抖
-export const useDebounce = (value: any, delay: any) => {
+export const useDebounce = <V>(value: V, delay: any) => {
   const [debounceValue, setDebouncedValue] = useState(value);
 
   useEffect(() => {
