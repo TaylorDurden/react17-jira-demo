@@ -4,16 +4,16 @@ import "./App.css";
 import { calculate } from "entry";
 import { ProjectListScreen } from "page/project";
 import { LoginScreen } from "page/login";
+import { useAuth } from "context/auth-context";
+import { AuthenticatedApp } from "authenticated-app";
+import { UnauthenticatedApp } from "page/unauthenticated-app";
 
 function App() {
-  useEffect(() => {
-    calculate();
-  });
+  const { user } = useAuth();
 
   return (
     <div className="App">
-      <LoginScreen></LoginScreen>
-      {/* <ProjectListScreen></ProjectListScreen> */}
+      {user ? <AuthenticatedApp /> : <UnauthenticatedApp />}
     </div>
   );
 }
