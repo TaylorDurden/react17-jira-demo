@@ -4,21 +4,20 @@ import { User } from "page/project/search-panel";
 import { http } from "util/http";
 import { useMount } from "util/index";
 
-
 interface AuthForm {
   username: string;
   password: string;
 }
 
-const bootstrapUser = async() => {
-  let user = null
-  const token = Auth.getToken()
-  if(token){
-    const data = await http('me', {token})
-    user = data.user
+const bootstrapUser = async () => {
+  let user = null;
+  const token = Auth.getToken();
+  if (token) {
+    const data = await http("me", { token });
+    user = data.user;
   }
-  return user
-}
+  return user;
+};
 
 const AuthContext = React.createContext<
   | {
@@ -33,15 +32,14 @@ AuthContext.displayName = "AuthContext";
 
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [user, setUser] = useState<User | null>(null);
-
   // (user => setUser(user) ==> setUser) === 函数式编程中的point free
   const login = (form: AuthForm) => Auth.login(form).then(setUser);
   const register = (form: AuthForm) => Auth.register(form).then(setUser);
   const logout = () => Auth.logout().then(() => setUser(null));
 
   useMount(() => {
-    bootstrapUser().then(setUser)
-  })
+    bootstrapUser().then(setUser);
+  });
 
   return (
     <AuthContext.Provider
