@@ -1,5 +1,7 @@
 import { Form, Select, Input } from "antd";
 
+const FormItem = Form.Item;
+
 export interface User {
   id: string;
   name: string;
@@ -24,8 +26,8 @@ export const SearchPanel = ({
   setParam,
 }: SearchPanelProps) => {
   return (
-    <Form>
-      <div>
+    <Form style={{ marginBottom: "2rem" }} layout="inline">
+      <FormItem>
         {/* setParam(Object.assign({}, param, {name: e.target.value})) */}
         <Input
           type="text"
@@ -37,6 +39,8 @@ export const SearchPanel = ({
             })
           }
         />
+      </FormItem>
+      <FormItem>
         <Select
           value={param.personId}
           onChange={(value) =>
@@ -53,7 +57,7 @@ export const SearchPanel = ({
             </Select.Option>
           ))}
         </Select>
-      </div>
+      </FormItem>
     </Form>
   );
 };

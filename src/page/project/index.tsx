@@ -1,9 +1,9 @@
 import { useEffect, useState } from "react";
 import { List } from "./list";
 import { SearchPanel } from "./search-panel";
-import qs from "qs";
 import { CleanObject, useDebounce, useMount } from "../../util";
 import { useHttp } from "util/http";
+import styled from "@emotion/styled";
 
 const apiUrl = process.env.REACT_APP_API_URL;
 
@@ -18,21 +18,28 @@ export const ProjectListScreen = () => {
   const httpClient = useHttp();
 
   useEffect(() => {
-    httpClient('projects', {data: CleanObject(debouncedParam)}).then(setProjects)
+    httpClient("projects", { data: CleanObject(debouncedParam) }).then(
+      setProjects
+    );
   }, [debouncedParam]);
 
   useMount(() => {
-    httpClient('users').then(setUsers)
+    httpClient("users").then(setUsers);
   });
 
   return (
-    <div>
+    <Container>
+      <h1>项目列表</h1>
       <SearchPanel
         users={users}
         param={param}
         setParam={setParam}
       ></SearchPanel>
       <List projects={projects} users={users}></List>
-    </div>
+    </Container>
   );
 };
+
+const Container = styled.div`
+  padding: 3.2rem;
+`;
