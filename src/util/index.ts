@@ -5,11 +5,14 @@ import { useEffect, useState } from "react";
 // !!{a:1}  相当于是    Boolean({a:1})    //结果为true
 export const isFalsy = (value: any) => (value === 0 ? false : !value);
 
-export const CleanObject = (object: any) => {
+export const isVoid = (value: unknown) =>
+  value === undefined || value === null || value === "";
+
+export const cleanObject = (object: { [key: string]: unknown }) => {
   const result = { ...object };
   Object.keys(result).forEach((key) => {
     const value = result[key];
-    if (isFalsy(value)) {
+    if (isVoid(value)) {
       delete result[key];
     }
   });
@@ -19,6 +22,7 @@ export const CleanObject = (object: any) => {
 export const useMount = (callback: any) => {
   useEffect(() => {
     callback();
+    // TODO: 依赖项里加上callback会造成无线循环，这个和useCallback以及useMemo有关系
   }, []);
 };
 
