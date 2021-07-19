@@ -3,6 +3,9 @@ import * as Auth from "auth-provider";
 import { User } from "page/project/search-panel";
 import { http } from "util/http";
 import { useMount } from "util/index";
+import { useAsync } from "util/use-async";
+import { FullPageErrorFallback, FullPageLoading } from "components/lib";
+import { isError } from "react-query";
 
 interface AuthForm {
   username: string;
@@ -31,15 +34,32 @@ const AuthContext = React.createContext<
 AuthContext.displayName = "AuthContext";
 
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
-  const [user, setUser] = useState<User | null>(null);
+  // const [user, setUser] = useState<User | null>(null);
+  const {
+    data: user,
+    error,
+    loading,
+    isError,
+    setData: setUser,
+    run,
+    idle,
+  } = useAsync<User | null>();
   // (user => setUser(user) ==> setUser) === 函数式编程中的point free
   const login = (form: AuthForm) => Auth.login(form).then(setUser);
   const register = (form: AuthForm) => Auth.register(form).then(setUser);
   const logout = () => Auth.logout().then(() => setUser(null));
 
   useMount(() => {
-    bootstrapUser().then(setUser);
+    run(bootstrapUser());
   });
+
+  if (idle || loading) {
+    return <FullPageLoading />;
+  }
+
+  if (isError) {
+    return <FullPageErrorFallback error={error} />;
+  }
 
   return (
     <AuthContext.Provider

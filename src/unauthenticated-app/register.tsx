@@ -1,6 +1,7 @@
 import { useAuth } from "context/auth-context";
 import { Form, Input } from "antd";
 import { LongButton } from "unauthenticated-app";
+import { useAsync } from "util/use-async";
 
 const FormItem = Form.Item;
 
@@ -10,6 +11,7 @@ export const RegisterScreen = ({
   onError: (error: Error) => void;
 }) => {
   const { user, register } = useAuth();
+  const { run, loading } = useAsync(undefined, { throwOnError: true });
 
   // HTMLFormElement extends Element
   const handleSubmit = async ({
@@ -25,7 +27,7 @@ export const RegisterScreen = ({
       return;
     }
     try {
-      await register(values);
+      await run(register(values));
     } catch (error) {
       onError(error);
     }
@@ -52,7 +54,7 @@ export const RegisterScreen = ({
         <Input type="password" placeholder="确认密码" id={"confirmPassword"} />
       </FormItem>
       <FormItem>
-        <LongButton htmlType={"submit"} type={"primary"}>
+        <LongButton loading={loading} htmlType={"submit"} type={"primary"}>
           注册
         </LongButton>
       </FormItem>

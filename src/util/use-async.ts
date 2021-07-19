@@ -69,7 +69,7 @@ export const useAsync = <D>(
   return {
     idle: state.status === "idle",
     loading: state.status === "loading",
-    error: state.status === "error",
+    isError: state.status === "error",
     success: state.status === "success",
     run,
     setData,
