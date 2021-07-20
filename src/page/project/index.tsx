@@ -1,7 +1,12 @@
 import { useEffect, useState } from "react";
 import { List } from "./list";
 import { SearchPanel } from "./search-panel";
-import { cleanObject, useDebounce, useMount } from "../../util";
+import {
+  cleanObject,
+  useDebounce,
+  useDocumentTitle,
+  useMount,
+} from "../../util";
 import { useHttp } from "util/http";
 import styled from "@emotion/styled";
 import { Typography } from "antd";
@@ -23,14 +28,10 @@ export const ProjectListScreen = () => {
     name: "",
     personId: "",
   });
-  // const [projects, setProjects] = useState([]);
-  // const [users, setUsers] = useState([]);
   const debouncedParam = useDebounce(param, 500);
-  const httpClient = useHttp();
-  // const [loading, setLoading] = useState(false);
-  // const [error, setError] = useState<null | Error>(null);
   const { loading, error, data: projects } = useProjects(debouncedParam);
   const { data: users } = useUsers();
+  useDocumentTitle("项目列表", false);
 
   return (
     <Container>

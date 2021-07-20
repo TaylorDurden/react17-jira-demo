@@ -1,6 +1,6 @@
 // !!"123"  相当于是   Boolean("123")    //结果为true
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 // !!{a:1}  相当于是    Boolean({a:1})    //结果为true
 export const isFalsy = (value: any) => (value === 0 ? false : !value);
@@ -67,4 +67,30 @@ export const useArray = <T>(initialArray: T[]) => {
       setValue(copy);
     },
   };
+};
+
+export const useDocumentTitle = (
+  title: string,
+  keepOnUnmount: boolean = true
+) => {
+  // useRef 返回一个可变的 ref 对象，其 .current 属性被初始化为传入的参数（initialValue）。
+  // 返回的 ref 对象在组件的整个生命周期内持续存在。
+  let oldTitle = useRef(document.title).current;
+
+  // 页面加载时：旧title
+  // 加载后：新title
+
+  useEffect(() => {
+    document.title = title;
+  }, [title]);
+
+  useEffect(() => {
+    return () => {
+      if (!keepOnUnmount) {
+        // console.log('卸载时的oldTitle', oldTitle);
+        // 如果不指定依赖，读到的就是旧title
+        document.title = oldTitle;
+      }
+    };
+  }, [keepOnUnmount, oldTitle]);
 };
