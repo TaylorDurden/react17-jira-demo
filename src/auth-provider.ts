@@ -1,6 +1,6 @@
 // 在真实环境中，如果使用firebase这种第三方auth服务的话，本文件不需要开发者开发
 
-import { User } from "page/project/search-panel";
+import { User } from "page/project-list/search-panel";
 const apiUrl = process.env.REACT_APP_API_URL;
 
 const localStorageKey = "__auth_provider_token__";

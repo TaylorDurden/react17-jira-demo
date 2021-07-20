@@ -1,6 +1,6 @@
 import React, { ReactNode, useState } from "react";
 import * as Auth from "auth-provider";
-import { User } from "page/project/search-panel";
+import { User } from "page/project-list/search-panel";
 import { http } from "util/http";
 import { useMount } from "util/index";
 import { useAsync } from "util/use-async";

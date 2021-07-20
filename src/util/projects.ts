@@ -1,4 +1,4 @@
-import { Project } from "page/project";
+import { Project } from "page/project-list";
 import { useEffect } from "react";
 import { cleanObject } from "util/index";
 import { useHttp } from "./http";
