@@ -1,6 +1,7 @@
 import qs from "qs";
-import * as auth from 'auth-provider'
+import * as auth from "auth-provider";
 import { useAuth } from "context/auth-context";
+import { useCallback } from "react";
 const apiUrl = process.env.REACT_APP_API_URL;
 
 interface Config extends RequestInit {
@@ -28,25 +29,27 @@ export const http = async (
   }
 
   // axios would throw error when response status is not 2xx
-  return window.fetch(`${apiUrl}/${endpoint}`, config)
-  .then(async res => {
-    if(res.status === 401){
+  return window.fetch(`${apiUrl}/${endpoint}`, config).then(async (res) => {
+    if (res.status === 401) {
       await auth.logout();
-      window.location.reload()
-      return Promise.reject({message:"please login again"});
+      window.location.reload();
+      return Promise.reject({ message: "please login again" });
     }
 
     const data = await res.json();
-    if(res.ok){
+    if (res.ok) {
       return data;
-    }
-    else{
+    } else {
       return Promise.reject(data);
     }
   });
 };
 
 export const useHttp = () => {
-  const {user} = useAuth();
-  return (...[endpoint, config]: Parameters<typeof http>) => http(endpoint, {...config, token: user?.token})
-}
+  const { user } = useAuth();
+  return useCallback(
+    (...[endpoint, config]: Parameters<typeof http>) =>
+      http(endpoint, { ...config, token: user?.token }),
+    [user?.token]
+  );
+};

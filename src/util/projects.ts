@@ -1,5 +1,5 @@
 import { Project } from "page/project-list";
-import { useEffect } from "react";
+import { useCallback, useEffect } from "react";
 import { cleanObject } from "util/index";
 import { useHttp } from "./http";
 import { useAsync } from "./use-async";
@@ -7,14 +7,16 @@ import { useAsync } from "./use-async";
 export const useProjects = (params?: Partial<Project>) => {
   const httpClient = useHttp();
   const { run, ...result } = useAsync<Project[]>();
-  const fetchProjects = () =>
-    httpClient("projects", { data: cleanObject(params || {}) });
+  const fetchProjects = useCallback(
+    () => httpClient("projects", { data: cleanObject(params || {}) }),
+    [httpClient, params]
+  );
 
   useEffect(() => {
     run(fetchProjects(), {
       retry: fetchProjects,
     });
-  }, [params]);
+  }, [params, run, fetchProjects]);
   return result;
 };
 
