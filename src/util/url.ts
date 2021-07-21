@@ -19,6 +19,8 @@ export const useUrlQueryParam = <K extends string>(keys: K[]) => {
     // params是外部传进来的key value
     (params: Partial<{ [key in K]: unknown }>) => {
       // 使用 Object.fromEntries 将数组转成对象
+      // iterator
+      // iterator: https://codesandbox.io/s/upbeat-wood-bum3j?file=/src/index.js
       const o = cleanObject({
         ...Object.fromEntries(searchParams),
         ...params,
