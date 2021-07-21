@@ -28,6 +28,7 @@ export const ProjectListScreen = () => {
     loading,
     error,
     data: projects,
+    retry,
   } = useProjects(useDebounce(param, 200));
   const { data: users } = useUsers();
   useDocumentTitle("项目列表", false);
@@ -44,6 +45,7 @@ export const ProjectListScreen = () => {
         dataSource={projects || []}
         loading={loading}
         users={users || []}
+        refresh={retry}
       ></List>
     </Container>
   );

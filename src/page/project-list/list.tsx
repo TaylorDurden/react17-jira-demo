@@ -3,17 +3,36 @@ import { Table, TableProps } from "antd";
 import dayjs from "dayjs";
 import { Project } from ".";
 import { Link } from "react-router-dom";
+import Pin from "components/pin";
+import { useEditProject } from "util/projects";
+import { check } from "prettier";
 
 interface ListProps<T> extends TableProps<Project> {
   users: T[];
+  refresh?: () => void;
 }
 
 export const List = ({ users = [], ...props }: ListProps<User>) => {
+  const { mutate } = useEditProject();
+  // 封装成柯里化，point free
+  const pinProject = (id: number) => (pin: boolean) =>
+    mutate({ id, pin }).then(props.refresh);
   return (
     <Table
       pagination={false}
       rowKey={"id"}
       columns={[
+        {
+          title: <Pin checked={true} disabled={true} />,
+          render(value, project) {
+            return (
+              <Pin
+                checked={project.pin}
+                onCheckedChange={pinProject(project.id)}
+              />
+            );
+          },
+        },
         {
           title: "名称",
           dataIndex: "name",
