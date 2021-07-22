@@ -8,7 +8,7 @@ import { useProjects } from "util/projects";
 import { useUsers } from "util/users";
 import { useUrlQueryParam } from "util/url";
 import { useProjectModal, useProjectSearchParams } from "./util";
-import { ButtonNoPadding, Row } from "components/lib";
+import { ButtonNoPadding, ErrorBox, Row } from "components/lib";
 
 // TODO: Id改成number类型
 export interface Project {
@@ -25,12 +25,7 @@ export const ProjectListScreen = () => {
   // const [param, setParam] = useUrlQueryParam(["name", "personId"]);
   // setParam({name: '123'})
   const [param, setParam] = useProjectSearchParams();
-  const {
-    loading,
-    error,
-    data: projects,
-    retry,
-  } = useProjects(useDebounce(param, 200));
+  const { error, data: projects } = useProjects(useDebounce(param, 200));
   const { data: users } = useUsers();
   useDocumentTitle("项目列表", false);
   console.log(useUrlQueryParam(["name"]));
@@ -45,14 +40,12 @@ export const ProjectListScreen = () => {
         </ButtonNoPadding>
       </Row>
       <SearchPanel users={users || []} param={param} setParam={setParam} />
-      {error ? (
-        <Typography.Text type={"danger"}>{error.message}</Typography.Text>
-      ) : null}
+      <ErrorBox error={error} />
       <List
         dataSource={projects || []}
-        loading={loading}
+        // loading={loading}
         users={users || []}
-        refresh={retry}
+        // refresh={retry}
       ></List>
     </Container>
   );

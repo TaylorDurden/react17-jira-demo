@@ -1,23 +1,17 @@
 import { Project } from "page/project-list";
 import { useCallback, useEffect } from "react";
+import { useQuery } from "react-query";
 import { cleanObject } from "util/index";
 import { useHttp } from "./http";
 import { useAsync } from "./use-async";
 
 export const useProjects = (params?: Partial<Project>) => {
   const httpClient = useHttp();
-  const { run, ...result } = useAsync<Project[]>();
-  const fetchProjects = useCallback(
-    () => httpClient("projects", { data: cleanObject(params || {}) }),
-    [httpClient, params]
+  // params 变化会重新请求
+  return useQuery<Project[], Error>(
+    ["projects", cleanObject(params || {})],
+    () => httpClient("projects", { data: params })
   );
-
-  useEffect(() => {
-    run(fetchProjects(), {
-      retry: fetchProjects,
-    });
-  }, [params, run, fetchProjects]);
-  return result;
 };
 
 export const useEditProject = () => {
