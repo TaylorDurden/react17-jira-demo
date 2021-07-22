@@ -5,13 +5,13 @@ import { Project } from ".";
 import { Link } from "react-router-dom";
 import Pin from "components/pin";
 import { useEditProject } from "util/projects";
-import { check } from "prettier";
 import { ButtonNoPadding } from "components/lib";
+import { useDispatch } from "react-redux";
+import { projectListActions } from "./project-list.slice";
 
 interface ListProps<T> extends TableProps<Project> {
   users: T[];
   refresh?: () => void;
-  projectButton: JSX.Element;
 }
 
 export const List = ({ users = [], ...props }: ListProps<User>) => {
@@ -19,6 +19,7 @@ export const List = ({ users = [], ...props }: ListProps<User>) => {
   // 封装成柯里化，point free
   const pinProject = (id: number) => (pin: boolean) =>
     mutate({ id, pin }).then(props.refresh);
+  const dispatch = useDispatch();
   return (
     <Table
       pagination={false}
@@ -76,7 +77,16 @@ export const List = ({ users = [], ...props }: ListProps<User>) => {
               <Dropdown
                 overlay={
                   <Menu>
-                    <Menu.Item key={"edit"}>{props.projectButton}</Menu.Item>
+                    <Menu.Item key={"edit"}>
+                      <ButtonNoPadding
+                        onClick={() =>
+                          dispatch(projectListActions.openProjectModal())
+                        }
+                        type="link"
+                      >
+                        编辑
+                      </ButtonNoPadding>
+                    </Menu.Item>
                   </Menu>
                 }
               >
