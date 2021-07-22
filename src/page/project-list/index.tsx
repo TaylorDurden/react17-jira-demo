@@ -20,9 +20,7 @@ export interface Project {
   created: number;
 }
 
-export const ProjectListScreen = (props: {
-  setProjectModalOpen: (visible: boolean) => void;
-}) => {
+export const ProjectListScreen = (props: { projectButton: JSX.Element }) => {
   // 基本类型，可以放在依赖里；组件状态，可以放在依赖里；非组件状态的对象，绝不可以放到依赖里；
   // const [param, setParam] = useUrlQueryParam(["name", "personId"]);
   // setParam({name: '123'})
@@ -41,16 +39,14 @@ export const ProjectListScreen = (props: {
     <Container>
       <Row spaceBetween={true}>
         <h1>项目列表</h1>
-        <Button onClick={() => props.setProjectModalOpen(true)}>
-          创建项目
-        </Button>
+        {props.projectButton}
       </Row>
       <SearchPanel users={users || []} param={param} setParam={setParam} />
       {error ? (
         <Typography.Text type={"danger"}>{error.message}</Typography.Text>
       ) : null}
       <List
-        setProjectModalOpen={props.setProjectModalOpen}
+        projectButton={props.projectButton}
         dataSource={projects || []}
         loading={loading}
         users={users || []}
