@@ -5,13 +5,11 @@ import { Project } from ".";
 import { Link } from "react-router-dom";
 import Pin from "components/pin";
 import { useEditProject } from "util/projects";
-import { check } from "prettier";
 import { ButtonNoPadding } from "components/lib";
 
 interface ListProps<T> extends TableProps<Project> {
   users: T[];
   refresh?: () => void;
-  projectButton: JSX.Element;
 }
 
 export const List = ({ users = [], ...props }: ListProps<User>) => {
@@ -76,7 +74,7 @@ export const List = ({ users = [], ...props }: ListProps<User>) => {
               <Dropdown
                 overlay={
                   <Menu>
-                    <Menu.Item key={"edit"}>{props.projectButton}</Menu.Item>
+                    <Menu.Item key={"edit"}></Menu.Item>
                   </Menu>
                 }
               >
