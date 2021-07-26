@@ -25,7 +25,11 @@ export const ProjectListScreen = () => {
   // const [param, setParam] = useUrlQueryParam(["name", "personId"]);
   // setParam({name: '123'})
   const [param, setParam] = useProjectSearchParams();
-  const { error, data: projects } = useProjects(useDebounce(param, 200));
+  const {
+    error,
+    data: projects,
+    isLoading,
+  } = useProjects(useDebounce(param, 200));
   const { data: users } = useUsers();
   useDocumentTitle("项目列表", false);
   console.log(useUrlQueryParam(["name"]));
@@ -43,7 +47,7 @@ export const ProjectListScreen = () => {
       <ErrorBox error={error} />
       <List
         dataSource={projects || []}
-        // loading={loading}
+        loading={isLoading}
         users={users || []}
         // refresh={retry}
       ></List>
