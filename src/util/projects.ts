@@ -1,8 +1,13 @@
 import { Project } from "page/project-list";
 import { useProjectSearchParams } from "page/project-list/util";
-import { useMutation, useQuery, useQueryClient } from "react-query";
+import { QueryKey, useMutation, useQuery, useQueryClient } from "react-query";
 import { cleanObject } from "util/index";
 import { useHttp } from "./http";
+import {
+  useAddConfig,
+  useDeleteConfig,
+  useEditConfig,
+} from "./use-optimistic-options";
 
 export const useProjects = (params?: Partial<Project>) => {
   const httpClient = useHttp();
@@ -12,55 +17,39 @@ export const useProjects = (params?: Partial<Project>) => {
   );
 };
 
-export const useEditProject = () => {
+export const useEditProject = (queryKey: QueryKey) => {
   const client = useHttp();
-  const queryClient = useQueryClient();
   const [searchParams] = useProjectSearchParams();
-  const queryKey = ["projects", searchParams];
   return useMutation(
     (params: Partial<Project>) =>
       client(`projects/${params.id}`, {
         data: params,
         method: "PATCH",
       }),
-    {
-      onSuccess: () => queryClient.invalidateQueries(queryKey),
-      // Optimistic UI Update
-      async onMutate(target) {
-        const previousItems = queryClient.getQueryData(queryKey);
-        // Here setQueryData by queryKey with target(new value), finding old project in query cache projects by id, overwrite new data for that matched project.
-        queryClient.setQueryData(
-          queryKey,
-          (old?: Project[]) =>
-            old?.map((project) =>
-              project.id === target.id ? { ...project, ...target } : project
-            ) || []
-        );
-        return { previousItems }; //这里给onError做数据回滚
-      },
-      // Optimistic UI Update Error Rollback Data
-      onError(error, newItem, context) {
-        queryClient.setQueryData(
-          queryKey,
-          (context as { previousItems: Project[] }).previousItems
-        );
-      },
-    }
+    useEditConfig(queryKey)
   );
 };
 
-export const useAddProject = () => {
+export const useAddProject = (queryKey: QueryKey) => {
   const client = useHttp();
-  const queryClient = useQueryClient();
   return useMutation(
     (params: Partial<Project>) =>
       client(`projects`, {
         data: params,
         method: "POST",
       }),
-    {
-      onSuccess: () => queryClient.invalidateQueries(`projects`),
-    }
+    useAddConfig(queryKey)
+  );
+};
+
+export const useDeleteProject = (queryKey: QueryKey) => {
+  const client = useHttp();
+  return useMutation(
+    ({ id }: { id: number }) =>
+      client(`projects/${id}`, {
+        method: "DELETE",
+      }),
+    useDeleteConfig(queryKey)
   );
 };
 

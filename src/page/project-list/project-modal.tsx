@@ -5,7 +5,7 @@ import { ErrorBox } from "components/lib";
 import { UserSelect } from "components/user-select";
 import React, { useEffect } from "react";
 import { useAddProject, useEditProject } from "util/projects";
-import { useProjectModal } from "./util";
+import { useProjectModal, useProjectsQueryKey } from "./util";
 
 type DrawerProps = React.ComponentProps<typeof Drawer>;
 
@@ -20,7 +20,12 @@ export const ProjectModal = () => {
   const useMutateProject = editingProjectDetail
     ? useEditProject
     : useAddProject;
-  const { mutateAsync, error, isLoading: mutateLoading } = useMutateProject();
+  const queryKey = useProjectsQueryKey();
+  const {
+    mutateAsync,
+    error,
+    isLoading: mutateLoading,
+  } = useMutateProject(queryKey);
   const [form] = useForm();
 
   const onFinish = (values: any) => {
