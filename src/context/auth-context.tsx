@@ -5,7 +5,7 @@ import { http } from "util/http";
 import { useMount } from "util/index";
 import { useAsync } from "util/use-async";
 import { FullPageErrorFallback, FullPageLoading } from "components/lib";
-import { isError } from "react-query";
+import { isError, useQueryClient } from "react-query";
 
 interface AuthForm {
   username: string;
@@ -45,9 +45,14 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     idle,
   } = useAsync<User | null>();
   // (user => setUser(user) ==> setUser) === 函数式编程中的point free
+  const queryClient = useQueryClient();
   const login = (form: AuthForm) => Auth.login(form).then(setUser);
   const register = (form: AuthForm) => Auth.register(form).then(setUser);
-  const logout = () => Auth.logout().then(() => setUser(null));
+  const logout = () =>
+    Auth.logout().then(() => {
+      setUser(null);
+      queryClient.clear();
+    });
 
   useMount(() => {
     run(bootstrapUser());

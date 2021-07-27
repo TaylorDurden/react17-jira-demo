@@ -12,8 +12,9 @@ import {
 export const useProjects = (params?: Partial<Project>) => {
   const httpClient = useHttp();
   // params 变化会重新请求
-  return useQuery<Project[], Error>(["projects", params], () =>
-    httpClient("projects", { data: params })
+  return useQuery<Project[], Error>(
+    ["projects", cleanObject(params || {})],
+    () => httpClient("projects", { data: params })
   );
 };
 
