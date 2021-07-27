@@ -82,7 +82,7 @@ export const List = ({ users = [], ...props }: ListProps<User>) => {
 };
 
 const More = ({ project }: { project: Project }) => {
-  const { open, editProjectById } = useProjectModal();
+  const { editProjectById } = useProjectModal();
   const { mutate: deleteProject } = useDeleteProject(useProjectsQueryKey());
   const confirmDeleteProject = (id: number) => {
     Modal.confirm({
@@ -99,21 +99,14 @@ const More = ({ project }: { project: Project }) => {
     <Dropdown
       overlay={
         <Menu>
-          <Menu.Item key={"edit"}>
-            <ButtonNoPadding
-              onClick={() => editProjectById(project.id)}
-              type="link"
-            >
-              编辑
-            </ButtonNoPadding>
+          <Menu.Item onClick={() => editProjectById(project.id)} key={"edit"}>
+            编辑
           </Menu.Item>
-          <Menu.Item key={"delete"}>
-            <ButtonNoPadding
-              onClick={() => confirmDeleteProject(project.id)}
-              type="link"
-            >
-              删除
-            </ButtonNoPadding>
+          <Menu.Item
+            onClick={() => confirmDeleteProject(project.id)}
+            key={"delete"}
+          >
+            删除
           </Menu.Item>
         </Menu>
       }
