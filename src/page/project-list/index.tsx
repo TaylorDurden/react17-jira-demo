@@ -10,16 +10,6 @@ import { useUrlQueryParam } from "util/url";
 import { useProjectModal, useProjectSearchParams } from "./util";
 import { ButtonNoPadding, ErrorBox, Row } from "components/lib";
 
-// TODO: Id改成number类型
-export interface Project {
-  id: number;
-  name: string;
-  personId: number;
-  pin: boolean;
-  organization: string;
-  created: number;
-}
-
 export const ProjectListScreen = () => {
   // 基本类型，可以放在依赖里；组件状态，可以放在依赖里；非组件状态的对象，绝不可以放到依赖里；
   // const [param, setParam] = useUrlQueryParam(["name", "personId"]);

@@ -1,18 +1,9 @@
-import { Form, Select, Input } from "antd";
+import { Form, Input } from "antd";
 import { UserSelect } from "components/user-select";
-import { Project } from ".";
+import { Project } from "types/project";
+import { User } from "types/user";
 
 const FormItem = Form.Item;
-
-export interface User {
-  id: number;
-  name: string;
-  email: string;
-  title: string;
-  token: string;
-  organization: string;
-}
-
 interface SearchPanelProps {
   users: User[];
   // param: {

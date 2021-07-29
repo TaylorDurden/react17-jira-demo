@@ -1,7 +1,7 @@
-import { User } from "./search-panel";
+import { User } from "types/user";
 import { Dropdown, Menu, Modal, Table, TableProps } from "antd";
 import dayjs from "dayjs";
-import { Project } from ".";
+import { Project } from "types/project";
 import { Link } from "react-router-dom";
 import Pin from "components/pin";
 import { useDeleteProject, useEditProject } from "util/projects";
@@ -99,14 +99,21 @@ const More = ({ project }: { project: Project }) => {
     <Dropdown
       overlay={
         <Menu>
-          <Menu.Item onClick={() => editProjectById(project.id)} key={"edit"}>
-            编辑
+          <Menu.Item key={"edit"}>
+            <ButtonNoPadding
+              onClick={() => editProjectById(project.id)}
+              type={"link"}
+            >
+              编辑
+            </ButtonNoPadding>
           </Menu.Item>
-          <Menu.Item
-            onClick={() => confirmDeleteProject(project.id)}
-            key={"delete"}
-          >
-            删除
+          <Menu.Item key={"delete"}>
+            <ButtonNoPadding
+              onClick={() => confirmDeleteProject(project.id)}
+              type={"link"}
+            >
+              删除
+            </ButtonNoPadding>
           </Menu.Item>
         </Menu>
       }

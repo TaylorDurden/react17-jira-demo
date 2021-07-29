@@ -1,4 +1,4 @@
-import { Project } from "page/project-list";
+import { Project } from "types/project";
 import { useProjectSearchParams } from "page/project-list/util";
 import { QueryKey, useMutation, useQuery, useQueryClient } from "react-query";
 import { cleanObject } from "util/index";
