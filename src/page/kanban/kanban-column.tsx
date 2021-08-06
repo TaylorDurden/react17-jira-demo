@@ -1,13 +1,13 @@
 import { Kanban } from "types/kanban";
 import { useTasks, useTaskTypes } from "util/task";
-import { useKanbanSearchParams } from "./util";
+import { useTaskSearchParams } from "./util";
 import taskIcon from "assets/task.svg";
 import bugIcon from "assets/bug.svg";
 import styled from "@emotion/styled";
 import { Card } from "antd";
 
 export const KanbanColumn = ({ kanban }: { kanban: Kanban }) => {
-  const { data: allTasks } = useTasks(useKanbanSearchParams());
+  const { data: allTasks } = useTasks(useTaskSearchParams());
   const tasks = allTasks?.filter((task) => task.kanbanId === kanban.id);
   return (
     <Container>

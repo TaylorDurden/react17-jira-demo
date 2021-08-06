@@ -8,7 +8,7 @@ import { useProjects } from "util/projects";
 import { useUsers } from "util/users";
 import { useUrlQueryParam } from "util/url";
 import { useProjectModal, useProjectSearchParams } from "./util";
-import { ButtonNoPadding, ErrorBox, Row } from "components/lib";
+import { ButtonNoPadding, ErrorBox, PageContainer, Row } from "components/lib";
 
 export const ProjectListScreen = () => {
   // 基本类型，可以放在依赖里；组件状态，可以放在依赖里；非组件状态的对象，绝不可以放到依赖里；
@@ -26,7 +26,7 @@ export const ProjectListScreen = () => {
   const { open } = useProjectModal();
 
   return (
-    <Container>
+    <PageContainer>
       <Row spaceBetween={true}>
         <h1>项目列表</h1>
         <ButtonNoPadding onClick={() => open()} type="link">
@@ -41,12 +41,12 @@ export const ProjectListScreen = () => {
         users={users || []}
         // refresh={retry}
       ></List>
-    </Container>
+    </PageContainer>
   );
 };
 
 ProjectListScreen.whyDidYouRender = false;
 
-const Container = styled.div`
-  padding: 3.2rem;
-`;
+// const Container = styled.div`
+//   padding: 3.2rem;
+// `;
