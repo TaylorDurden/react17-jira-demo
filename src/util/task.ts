@@ -1,9 +1,10 @@
-import { useQuery } from "react-query";
+import { QueryKey, useMutation, useQuery } from "react-query";
 import { Kanban } from "types/kanban";
 import { Task } from "types/task";
 import { cleanObject } from "util/index";
 import { useHttp } from "./http";
 import { useDebounce } from "util/index";
+import { useAddConfig } from "./use-optimistic-options";
 
 export const useTasks = (params?: Partial<Task>) => {
   const httpClient = useHttp();
@@ -18,4 +19,36 @@ export const useTaskTypes = () => {
   const httpClient = useHttp();
   // params 变化会重新请求
   return useQuery<Task[], Error>(["taskTypes"], () => httpClient("taskTypes"));
+};
+
+export const useAddTask = (queryKey: QueryKey) => {
+  const client = useHttp();
+  return useMutation(
+    (params: Partial<Task>) =>
+      client(`tasks`, {
+        data: params,
+        method: "POST",
+      }),
+    useAddConfig(queryKey)
+  );
+};
+
+export const useTask = (id: number) => {
+  const client = useHttp();
+
+  return useQuery(["task", { id }], () => client(`tasks/${id}`), {
+    enabled: Boolean(id),
+  });
+};
+
+export const useEditTask = (queryKey: QueryKey) => {
+  const client = useHttp();
+  return useMutation(
+    (params: Partial<Task>) =>
+      client(`tasks/${params.id}`, {
+        data: params,
+        method: "PATCH",
+      }),
+    useAddConfig(queryKey)
+  );
 };
