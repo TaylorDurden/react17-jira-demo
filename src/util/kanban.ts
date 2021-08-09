@@ -3,7 +3,7 @@ import { Kanban } from "types/kanban";
 import { Project } from "types/project";
 import { cleanObject } from "util/index";
 import { useHttp } from "./http";
-import { useAddConfig } from "./use-optimistic-options";
+import { useAddConfig, useDeleteConfig } from "./use-optimistic-options";
 
 export const useKanbans = (params?: Partial<Kanban>) => {
   const httpClient = useHttp();
@@ -22,5 +22,14 @@ export const useAddKanban = (queryKey: QueryKey) => {
         method: "POST",
       }),
     useAddConfig(queryKey)
+  );
+};
+
+export const useDeleteKanban = (queryKey: QueryKey) => {
+  const client = useHttp();
+
+  return useMutation(
+    ({ id }: { id: number }) => client(`kanbans/${id}`, { method: "DELETE" }),
+    useDeleteConfig(queryKey)
   );
 };

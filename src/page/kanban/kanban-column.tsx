@@ -1,11 +1,34 @@
 import { Kanban } from "types/kanban";
 import { useTasks, useTaskTypes } from "util/task";
-import { useTaskModal, useTaskSearchParams } from "./util";
+import { useKanbanQueryKey, useTaskModal, useTaskSearchParams } from "./util";
 import taskIcon from "assets/task.svg";
 import bugIcon from "assets/bug.svg";
 import styled from "@emotion/styled";
-import { Card } from "antd";
+import { Button, Card, Dropdown, Menu, Modal } from "antd";
 import { CreateTask } from "./create-task";
+import { Task } from "types/task";
+import { Mark } from "./mark";
+import { useDeleteKanban } from "util/kanban";
+import { Row } from "components/lib";
+
+const MenuItem = Menu.Item;
+
+const TaskCard = ({ task }: { task: Task }) => {
+  const { startEdit } = useTaskModal();
+  const { name: keyword } = useTaskSearchParams();
+  return (
+    <Card
+      onClick={() => startEdit(task.id)}
+      key={task.id}
+      style={{ marginBottom: "0.5rem", cursor: "pointer" }}
+    >
+      <p>
+        <Mark keyword={keyword} name={task.name} />
+      </p>
+      <TaskTypeIcon id={task.typeId} />
+    </Card>
+  );
+};
 
 export const KanbanColumn = ({ kanban }: { kanban: Kanban }) => {
   const { data: allTasks } = useTasks(useTaskSearchParams());
@@ -13,17 +36,14 @@ export const KanbanColumn = ({ kanban }: { kanban: Kanban }) => {
   const { startEdit } = useTaskModal();
   return (
     <KanbanColumnContainer>
-      <h3>{kanban.name}</h3>
+      <Row spaceBetween={true}>
+        <h3>{kanban.name}</h3>
+        <More kanban={kanban} />
+      </Row>
+
       <TaskContainer>
         {tasks?.map((task) => (
-          <Card
-            onClick={() => startEdit(task.id)}
-            key={task.id}
-            style={{ marginBottom: "0.5rem", cursor: "pointer" }}
-          >
-            <div>{task.name}</div>
-            <TaskTypeIcon id={task.typeId} />
-          </Card>
+          <TaskCard task={task} />
         ))}
         <CreateTask kanbanId={kanban.id} />
       </TaskContainer>
@@ -38,6 +58,34 @@ const TaskTypeIcon = ({ id }: { id: number }) => {
     return null;
   }
   return <img alt={""} src={name === "task" ? taskIcon : bugIcon} />;
+};
+
+const More = ({ kanban }: { kanban: Kanban }) => {
+  const { mutateAsync: deleteKanban } = useDeleteKanban(useKanbanQueryKey());
+  const confirmDelete = () => {
+    Modal.confirm({
+      title: "确定删除？",
+      okText: "删除",
+      cancelText: "取消",
+      onOk() {
+        deleteKanban({ id: kanban.id });
+      },
+    });
+  };
+  const overlay = (
+    <Menu>
+      <MenuItem>
+        <Button type={"link"} onClick={confirmDelete}>
+          删除
+        </Button>
+      </MenuItem>
+    </Menu>
+  );
+  return (
+    <Dropdown overlay={overlay}>
+      <Button type={"link"}>...</Button>
+    </Dropdown>
+  );
 };
 
 export const KanbanColumnContainer = styled.div`
