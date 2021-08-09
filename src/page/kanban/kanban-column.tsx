@@ -43,7 +43,7 @@ export const KanbanColumn = ({ kanban }: { kanban: Kanban }) => {
 
       <TaskContainer>
         {tasks?.map((task) => (
-          <TaskCard task={task} />
+          <TaskCard key={task.id} task={task} />
         ))}
         <CreateTask kanbanId={kanban.id} />
       </TaskContainer>
@@ -57,7 +57,9 @@ const TaskTypeIcon = ({ id }: { id: number }) => {
   if (!name) {
     return null;
   }
-  return <img alt={""} src={name === "task" ? taskIcon : bugIcon} />;
+  return (
+    <img alt={"TaskTypeIcon"} src={name === "task" ? taskIcon : bugIcon} />
+  );
 };
 
 const More = ({ kanban }: { kanban: Kanban }) => {
