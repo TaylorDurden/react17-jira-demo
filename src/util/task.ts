@@ -1,10 +1,13 @@
 import { QueryKey, useMutation, useQuery } from "react-query";
-import { Kanban } from "types/kanban";
 import { Task } from "types/task";
-import { cleanObject } from "util/index";
 import { useHttp } from "./http";
 import { useDebounce } from "util/index";
-import { useAddConfig, useDeleteConfig } from "./use-optimistic-options";
+import {
+  useAddConfig,
+  useDeleteConfig,
+  useReorderTaskConfig,
+} from "./use-optimistic-options";
+import { SortProps } from "./kanban";
 
 export const useTasks = (params?: Partial<Task>) => {
   const httpClient = useHttp();
@@ -60,4 +63,14 @@ export const useDeleteTask = (queryKey: QueryKey) => {
     ({ id }: { id: number }) => client(`tasks/${id}`, { method: "DELETE" }),
     useDeleteConfig(queryKey)
   );
+};
+
+export const useReorderTask = (queryKey: QueryKey) => {
+  const client = useHttp();
+  return useMutation((params: SortProps) => {
+    return client(`tasks/reorder`, {
+      data: params,
+      method: "POST",
+    });
+  }, useReorderTaskConfig(queryKey));
 };

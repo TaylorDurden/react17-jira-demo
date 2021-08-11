@@ -10,6 +10,8 @@ import { Task } from "types/task";
 import { Mark } from "./mark";
 import { useDeleteKanban } from "util/kanban";
 import { Row } from "components/lib";
+import React from "react";
+import { Drag, Drop, DropChild } from "./drag-drop";
 
 const MenuItem = Menu.Item;
 
@@ -30,26 +32,45 @@ const TaskCard = ({ task }: { task: Task }) => {
   );
 };
 
-export const KanbanColumn = ({ kanban }: { kanban: Kanban }) => {
+export const KanbanColumn = React.forwardRef<
+  HTMLDivElement,
+  { kanban: Kanban }
+>(({ kanban, ...props }, ref) => {
   const { data: allTasks } = useTasks(useTaskSearchParams());
   const tasks = allTasks?.filter((task) => task.kanbanId === kanban.id);
-  const { startEdit } = useTaskModal();
   return (
-    <KanbanColumnContainer>
+    <KanbanColumnContainer {...props} ref={ref}>
       <Row spaceBetween={true}>
         <h3>{kanban.name}</h3>
-        <More kanban={kanban} />
+        <More kanban={kanban} key={kanban.id} />
       </Row>
 
       <TaskContainer>
-        {tasks?.map((task) => (
-          <TaskCard key={task.id} task={task} />
-        ))}
+        <Drop
+          type={"ROW"}
+          direction={"vertical"}
+          droppableId={String(kanban.id)}
+        >
+          <DropChild style={{ minHeight: "1rem" }}>
+            {tasks?.map((task, taskIndex) => (
+              <Drag
+                key={task.id}
+                index={taskIndex}
+                draggableId={"task" + task.id}
+              >
+                {/* div包括子元素，可以传递ref到div上 */}
+                <div>
+                  <TaskCard key={task.id} task={task} />
+                </div>
+              </Drag>
+            ))}
+          </DropChild>
+        </Drop>
         <CreateTask kanbanId={kanban.id} />
       </TaskContainer>
     </KanbanColumnContainer>
   );
-};
+});
 
 const TaskTypeIcon = ({ id }: { id: number }) => {
   const { data: taskTypes } = useTaskTypes();
@@ -76,7 +97,7 @@ const More = ({ kanban }: { kanban: Kanban }) => {
   };
   const overlay = (
     <Menu>
-      <MenuItem>
+      <MenuItem key={"deleteKanban"}>
         <Button type={"link"} onClick={confirmDelete}>
           删除
         </Button>
