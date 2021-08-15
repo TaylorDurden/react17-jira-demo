@@ -52,4 +52,5 @@ const Main = styled.div`
 const Container = styled.div`
   display: grid;
   grid-template-columns: 16rem 1fr; // 左边16rem，右边自适应
+  width: 100%;
 `;

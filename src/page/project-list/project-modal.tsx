@@ -106,6 +106,6 @@ const Container = styled.div`
   display: flex;
   height: 80vh;
   flex-direction: column;
-  justifycontent: center;
+  justify-content: center;
   align-items: center;
 `;
