@@ -1,6 +1,7 @@
 import styled from "@emotion/styled";
 import { Spin } from "antd";
 import { PageContainer } from "components/lib";
+import { Profiler } from "components/profiler";
 import React, { useCallback } from "react";
 import { DragDropContext, DropResult } from "react-beautiful-dnd";
 import { useDocumentTitle } from "util/index";
@@ -29,37 +30,39 @@ export const KanbanScreen = () => {
   const isLoading = taskLoading || kanbanLoading;
   const dragEnd = useDragEnd();
   return (
-    <DragDropContext onDragEnd={dragEnd}>
-      <PageContainer>
-        <h1>{currentProject?.name} Kanban</h1>
-        <SearchPanel />
-        {isLoading ? (
-          <Spin size={"large"} />
-        ) : (
-          <ColumnContainer>
-            <Drop
-              type={"COLUMN"}
-              direction={"horizontal"}
-              droppableId={"kanban"}
-            >
-              <DropChild style={{ display: "flex" }}>
-                {kanbanList?.map((kanban, index) => (
-                  <Drag
-                    key={kanban.id}
-                    draggableId={"kanban" + kanban.id}
-                    index={index}
-                  >
-                    <KanbanColumn kanban={kanban} key={kanban.id} />
-                  </Drag>
-                ))}
-              </DropChild>
-            </Drop>
-            <CreateKanban />
-          </ColumnContainer>
-        )}
-        <TaskModal />
-      </PageContainer>
-    </DragDropContext>
+    <Profiler id={"看板页面"}>
+      <DragDropContext onDragEnd={dragEnd}>
+        <PageContainer>
+          <h1>{currentProject?.name} Kanban</h1>
+          <SearchPanel />
+          {isLoading ? (
+            <Spin size={"large"} />
+          ) : (
+            <ColumnContainer>
+              <Drop
+                type={"COLUMN"}
+                direction={"horizontal"}
+                droppableId={"kanban"}
+              >
+                <DropChild style={{ display: "flex" }}>
+                  {kanbanList?.map((kanban, index) => (
+                    <Drag
+                      key={kanban.id}
+                      draggableId={"kanban" + kanban.id}
+                      index={index}
+                    >
+                      <KanbanColumn kanban={kanban} key={kanban.id} />
+                    </Drag>
+                  ))}
+                </DropChild>
+              </Drop>
+              <CreateKanban />
+            </ColumnContainer>
+          )}
+          <TaskModal />
+        </PageContainer>
+      </DragDropContext>
+    </Profiler>
   );
 };
 

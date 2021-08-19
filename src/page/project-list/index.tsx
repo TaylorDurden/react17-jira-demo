@@ -9,6 +9,7 @@ import { useUsers } from "util/users";
 import { useUrlQueryParam } from "util/url";
 import { useProjectModal, useProjectSearchParams } from "./util";
 import { ButtonNoPadding, ErrorBox, PageContainer, Row } from "components/lib";
+import { Profiler } from "components/profiler";
 
 export const ProjectListScreen = () => {
   // 基本类型，可以放在依赖里；组件状态，可以放在依赖里；非组件状态的对象，绝不可以放到依赖里；
@@ -26,22 +27,24 @@ export const ProjectListScreen = () => {
   const { open } = useProjectModal();
 
   return (
-    <PageContainer>
-      <Row spaceBetween={true}>
-        <h1>项目列表</h1>
-        <ButtonNoPadding onClick={() => open()} type="link">
-          创建项目
-        </ButtonNoPadding>
-      </Row>
-      <SearchPanel users={users || []} param={param} setParam={setParam} />
-      <ErrorBox error={error} />
-      <List
-        dataSource={projects || []}
-        loading={isLoading}
-        users={users || []}
-        // refresh={retry}
-      ></List>
-    </PageContainer>
+    <Profiler id={"项目列表"}>
+      <PageContainer>
+        <Row spaceBetween={true}>
+          <h1>项目列表</h1>
+          <ButtonNoPadding onClick={() => open()} type="link">
+            创建项目
+          </ButtonNoPadding>
+        </Row>
+        <SearchPanel users={users || []} param={param} setParam={setParam} />
+        <ErrorBox error={error} />
+        <List
+          dataSource={projects || []}
+          loading={isLoading}
+          users={users || []}
+          // refresh={retry}
+        ></List>
+      </PageContainer>
+    </Profiler>
   );
 };
 
